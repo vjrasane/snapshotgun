@@ -35,7 +35,9 @@
     "rollup": "^0.60.1",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-filesize": "^4.0.1",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-progress": "^0.4.0",
     "rollup-plugin-uglify": "^4.0.0"
   },
   "keywords": [
@@ -48,7 +50,6 @@
   "author": "Ville Räsänen",
   "license": "Apache-2.0",
   "dependencies": {
-    "handlebars": "^4.0.12",
-    "options-parser": "^0.4.0"
+    "handlebars": "^4.0.12"
   }
 }
