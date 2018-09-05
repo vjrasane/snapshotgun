@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Generates Jest snapshot tests",
   "main": "dist/main.js",
-  "bin" : {
-    "snapshotgun" : "dist/main.js",
-    "ssgun" : "dist/main.js"
+  "bin": {
+    "snapshotgun": "dist/main.js",
+    "ssgun": "dist/main.js"
   },
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
@@ -17,11 +17,13 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.2",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "eslint": "^5.4.0",
@@ -44,5 +46,9 @@
     "snapshot"
   ],
   "author": "Ville Räsänen",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "handlebars": "^4.0.12",
+    "options-parser": "^0.4.0"
+  }
 }

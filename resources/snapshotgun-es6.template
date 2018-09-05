@@ -1,0 +1,13 @@
+import execute from {{executePath}};
+{{#each files}}
+import {{@key}} from {{this.path}};
+{{/each}}
+
+it('{{testName}}', () => {
+  const files = {
+    {{#each files}}
+    {{@key}}{{#unless @last}},{{/unless}}
+    {{/each}}
+  };
+  execute(files);
+});

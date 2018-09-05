@@ -12,13 +12,12 @@ export default {
   input: 'src/main.js',
   output: {
     file: 'dist/main.js',
-    format: 'cjs', // immediately-invoked function expression — suitable for <script> tags
-    sourcemap: true
+    format: 'cjs',
+    sourcemap: true,
+    banner: '#! /usr/bin/env node'
   },
   plugins: [
-    resolve(
-      // preferBuiltins: false
-    ),
+    resolve(),
     production &&
       babel({
         babelrc: false,
