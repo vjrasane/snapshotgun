@@ -1,0 +1,13 @@
+language: node_js
+node_js: 9
+after_success:
+- yarn coveralls
+- yarn build
+deploy:
+  provider: npm
+  email: vjrasane@gmail.com
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: 0E8eTZFoL/C0SRFJ44yLf6tJ14La80rFuBjCe9+kGzKrsWPJJAEOu1lQQ0WJ26sNuXmUTrrr91KoYcFl50yeM8dRGGcs2UPqoh5yW8wWuysxbImuykobHOzSPToayfDixlHfJfRxPHlEV9ZOpmTpANj49tyzqL+Zq762aCl0ybJNODywWYkcI1mwE4qwH3pdD5tMqFAz57YHV+6qgrApiCQazmvly8YKfm13+IVA+EnY45DyvNGOpXmfx1L8HqkMwe0+YfQp2UzHLHk9Vg6Tn4tcMCdCsHVe64FWxywy9GjfSDP2xCRZotFbyjB78T87sy3SmQOtgTaAQMDXGzPA8YkmFNG16JbntUlPQ/IwP18gnzPvJ3MgnNnbprbKJKY30RPTwS+hlAEqAvEVfkujJfp4OHR2pXL5m6QFP3fnF5f7aGJ4CW4Z7gtYwdA1/fSPOItV87e6pJzI1O3CqxFLfjDMe9y3bCjFhpaM/uei7C2T2YyRUWw5g6URVNmnmyalTAdlrA7tvilX0vkajCtrUBZZDjJiHmUx9sx8QuFVaWdxriP4f06RSO+2gLwqXXsTxmuFNw59S4XIZppVZ7GLxkbZmRM0eOL6KrA4+vXhZedr/zl46ecPiqXVpEyZEhTUCXK0U4E7JVuNQh8/2O28KZjsYZLJqxxwk+K+PJL9Wc4=
