@@ -1,6 +1,7 @@
 .gitignore
 .babelrc
 .eslintrc.json
+.eslintignore
 .travis.yml
 jest.config.js
 rollup.config.js
