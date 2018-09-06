@@ -16,6 +16,7 @@
   "plugins": ["import", "node", "promise", "standard"],
 
   "globals": {
+    "require": true,
     "document": false,
     "navigator": false,
     "window": false,

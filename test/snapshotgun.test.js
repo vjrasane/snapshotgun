@@ -16,9 +16,17 @@ const expectedDefinedDir = fs.readFileSync(
   join(dir, 'expected/snapshotgun_defined_dir.js'),
   'utf-8'
 );
+const expectedCommonJs = fs.readFileSync(
+  join(dir, 'expected/snapshotgun_common_js.js'),
+  'utf-8'
+);
 const testFilePath = join(
   dir,
   'data/snapshotgun/valid/testcase/testcase.test.js'
+);
+const commonJsPath = join(
+  dir,
+  'data/snapshotgun/common-js/testcase/testcase.test.js'
 );
 const definedExecFilePath = join(
   dir,
@@ -38,6 +46,9 @@ const cleanup = () => {
   }
   if (fs.existsSync(definedDirPath)) {
     fs.unlink(definedDirPath);
+  }
+  if (fs.existsSync(commonJsPath)) {
+    fs.unlink(commonJsPath);
   }
 };
 
@@ -81,7 +92,17 @@ describe('test snapshotgun', () => {
       dir: '../defined-dir'
     });
     expect(fs.existsSync(definedDirPath)).toBeTruthy();
-    expect(fs.readFileSync(definedDirPath, 'utf-8')).toEqual(expectedDefinedDir);
+    expect(fs.readFileSync(definedDirPath, 'utf-8')).toEqual(
+      expectedDefinedDir
+    );
+  });
+
+  it('common js', () => {
+    snapshotgun(join(dir, 'data/snapshotgun/common-js'), {
+      format: 'cjs'
+    });
+    expect(fs.existsSync(commonJsPath)).toBeTruthy();
+    expect(fs.readFileSync(commonJsPath, 'utf-8')).toEqual(expectedCommonJs);
   });
 
   it('multiple candidates', () => {

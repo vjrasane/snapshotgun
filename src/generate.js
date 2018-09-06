@@ -1,6 +1,6 @@
 import handles from 'handlebars';
 import { DOC_TYPE, DIR_TYPE } from './traverse';
-import { filterObj, mapObj, toPath } from './utils';
+import { filterObj, mapObj, toPath, getAnyField } from './utils';
 import read from './template';
 import relativePath from './relative';
 
@@ -33,14 +33,13 @@ const generate = (name, files, execute, baseDir, options) => {
         toPath(relativePath(testPath, doc.path))
       );
 
-      const testFileContents = handles.compile(
-        read('snapshotgun-es6.template')
-      )({
+      const format = getAnyField(['format', 'f'], options);
+
+      const testFileContents = handles.compile(read(format))({
         files,
         testName,
         executePath
       });
-
       const testFileName = join(baseDir, testPath, testName + '.test.js');
       if (!fs.existsSync(testFileName) || options.overwrite) {
         fs.writeFileSync(testFileName, testFileContents);
