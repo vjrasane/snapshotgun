@@ -9,5 +9,9 @@ it('{{testName}}', () => {
     {{@key}}{{#unless @last}},{{/unless}}
     {{/each}}
   };
-  expect(execute(files)).toMatchSnapshot();
+  try {
+    expect(execute(files)).toMatchSnapshot();
+  } catch (error) {
+    expect(error).toMatchSnapshot();
+  }
 });

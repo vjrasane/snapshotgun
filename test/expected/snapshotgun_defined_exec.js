@@ -5,5 +5,9 @@ it('testcase', () => {
   const files = {
     input
   };
-  expect(execute(files)).toMatchSnapshot();
+  try {
+    expect(execute(files)).toMatchSnapshot();
+  } catch (error) {
+    expect(error).toMatchSnapshot();
+  }
 });
