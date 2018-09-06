@@ -26,4 +26,6 @@ export const getAnyField = (fields, obj) => {
   return found ? obj[found] : null;
 };
 
-export const toPath = str => prependMissing(str.replace(/\\/g, '/'), './');
+export const replaceSlashes = str => str.replace(/\\/g, '/');
+
+export const toPath = str => prependMissing(replaceSlashes(str), './');

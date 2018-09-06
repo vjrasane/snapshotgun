@@ -1,29 +1,29 @@
 {
   "traversal": {
     "contents": {
-      "file": { "path": "data\\traversal\\file.json", "type": "doc" },
+      "file": { "path": "data/traversal/file.json", "type": "doc" },
       "subfolder": {
         "contents": {
           "file2": {
-            "path": "data\\traversal\\subfolder\\file2.json",
+            "path": "data/traversal/subfolder/file2.json",
             "type": "doc"
           },
           "subsubfolder": {
             "contents": {
               "file3": {
-                "path": "data\\traversal\\subfolder\\subsubfolder\\file3.json",
+                "path": "data/traversal/subfolder/subsubfolder/file3.json",
                 "type": "doc"
               }
             },
-            "path": "data\\traversal\\subfolder\\subsubfolder",
+            "path": "data/traversal/subfolder/subsubfolder",
             "type": "dir"
           }
         },
-        "path": "data\\traversal\\subfolder",
+        "path": "data/traversal/subfolder",
         "type": "dir"
       }
     },
-    "path": "data\\traversal",
+    "path": "data/traversal",
     "type": "dir"
   }
 }

@@ -2,24 +2,28 @@ import fs from 'fs';
 import { join, basename } from 'path';
 import generate from './generate';
 import traverse from './traverse';
-import { getAnyField } from './utils';
+import { getAnyField, replaceSlashes } from './utils';
 
 const snapshotgun = (baseDir, options) => {
+  const base = replaceSlashes(baseDir);
+
   const executeCandidates = [];
   const directories = [];
 
   const optExec = getAnyField(['exec', 'e'], options);
   const optDir = getAnyField(['dir', 'd'], options);
 
-  fs.readdirSync(baseDir).forEach(file => {
-    const fullPath = join(baseDir, file);
-
+  fs.readdirSync(base).forEach(file => {
+    const fullPath = replaceSlashes(join(base, file));
     if (!optDir && fs.statSync(fullPath).isDirectory()) {
-      directories.push(traverse(baseDir, fullPath));
+      directories.push(traverse(base, fullPath));
     } else if (!optExec) {
       try {
         const code = module.require(fullPath);
-        if (code.default) {
+        if (
+          Object.keys(code).length === 1 &&
+          typeof code[Object.keys(code)[0]] === 'function'
+        ) {
           executeCandidates.push(file);
         }
       } catch (error) {
@@ -43,16 +47,14 @@ const snapshotgun = (baseDir, options) => {
 
   let dirs;
   if (optDir) {
-    dirs = [traverse(baseDir, join(baseDir, optDir))];
+    dirs = [traverse(base, join(base, optDir))];
   } else if (!directories.length) {
     throw Error('No test file directories found.');
   } else {
     dirs = directories;
   }
 
-  dirs.forEach(dir =>
-    generate(basename(baseDir), dir, exec, baseDir, options)
-  );
+  dirs.forEach(dir => generate(basename(base), dir, exec, base, options));
 };
 
 export default snapshotgun;

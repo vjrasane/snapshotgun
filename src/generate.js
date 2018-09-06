@@ -19,7 +19,9 @@ const generate = (name, files, execute, baseDir, options) => {
     const inheritedDocs = { ...parentDocs, ...docs };
     if (!Object.keys(dirs).length && Object.keys(docs).length) {
       const testPath = dir.path;
-      const executePath = toPath(relativePath(join(baseDir, testPath), join(baseDir, execute)));
+      const executePath = toPath(
+        relativePath(join(baseDir, testPath), join(baseDir, execute))
+      );
 
       const files = mapObj(inheritedDocs, (name, doc) =>
         toPath(relativePath(testPath, doc.path))

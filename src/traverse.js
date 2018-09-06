@@ -1,6 +1,7 @@
 import fs from 'fs';
 import relativePath from './relative';
 import { join, basename } from 'path';
+import { replaceSlashes } from './utils';
 
 export const DIR_TYPE = 'dir';
 export const DOC_TYPE = 'doc';
@@ -12,7 +13,7 @@ const traverse = (basePath, path) => {
   const hierarchy = {};
 
   fs.readdirSync(path).forEach(filename => {
-    const fullPath = join(path, filename);
+    const fullPath = replaceSlashes(join(path, filename));
     const relPath = relativePath(basePath, fullPath);
 
     if (fs.statSync(fullPath).isDirectory()) {

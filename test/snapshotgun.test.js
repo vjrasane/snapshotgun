@@ -96,7 +96,7 @@ describe('test snapshotgun', () => {
     ).toThrow('No test file directories found.');
   });
 
-  // afterAll(() => {
-  //   cleanup();
-  // });
+  afterAll(() => {
+    cleanup();
+  });
 });

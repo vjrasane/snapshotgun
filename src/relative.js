@@ -1,8 +1,10 @@
-const relativePath = (source, target) => {
-  const separator = source.includes('/') ? '/' : '\\';
+import { replaceSlashes } from './utils';
 
-  const targetArr = target.split(separator);
-  const sourceArr = source.split(separator);
+const relativePath = (source, target) => {
+  const separator = '/';
+
+  const targetArr = replaceSlashes(target).split(separator);
+  const sourceArr = replaceSlashes(source).split(separator);
 
   const filename = targetArr.pop();
   const targetPath = targetArr.join(separator);
