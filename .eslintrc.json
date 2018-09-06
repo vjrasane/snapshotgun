@@ -25,7 +25,11 @@
     "it": true,
     "module": true,
     "expect": true,
-    "__dirname": true
+    "__dirname": true,
+    "beforeAll": true,
+    "beforeEach": true,
+    "afterAll": true,
+    "afterEach": true
   },
 
   "rules": {

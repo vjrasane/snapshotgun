@@ -1,6 +1,6 @@
-import execute from {{executePath}};
+import execute from '{{executePath}}';
 {{#each files}}
-import {{@key}} from {{this.path}};
+import {{@key}} from '{{this}}';
 {{/each}}
 
 it('{{testName}}', () => {
@@ -9,5 +9,5 @@ it('{{testName}}', () => {
     {{@key}}{{#unless @last}},{{/unless}}
     {{/each}}
   };
-  execute(files);
+  expect(execute(files)).toMatchSnapshot();
 });

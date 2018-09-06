@@ -1,37 +1,33 @@
 import fs from 'fs';
-import relativePath from './relative_path';
-import { join, resolve, dirname } from 'path';
+import relativePath from './relative';
+import { join, basename } from 'path';
 
 export const DIR_TYPE = 'dir';
 export const DOC_TYPE = 'doc';
 
-const traverse = (caller, parentPath) => {
-  const hierarchy = {};
+const getFileName = file => file.replace(/\.[^/.]+$/, '');
+const isJson = file => new RegExp('\\.json$', 'i').test(file);
 
-  const path = !parentPath
-    ? dirname(caller.filename)
-    : resolve(dirname(caller.filename), parentPath);
+const traverse = (basePath, path) => {
+  const hierarchy = {};
 
   fs.readdirSync(path).forEach(filename => {
     const fullPath = join(path, filename);
-    const relPath = relativePath(dirname(caller.filename), fullPath);
-    const basePath = relativePath(fullPath, dirname(caller.filename));
+    const relPath = relativePath(basePath, fullPath);
 
     if (fs.statSync(fullPath).isDirectory()) {
-      const files = traverse(caller, fullPath);
+      const files = traverse(basePath, fullPath);
       if (Object.keys(files).length) {
-        hierarchy[filename] = {
+        hierarchy[getFileName(filename)] = {
           type: DIR_TYPE,
           path: relPath,
-          base: basePath,
           contents: files
         };
       }
-    } else if (fullPath !== caller.filename) {
-      hierarchy[filename] = {
+    } else if (isJson(filename)) {
+      hierarchy[getFileName(filename)] = {
         type: DOC_TYPE,
-        path: relPath,
-        base: basePath
+        path: relPath
       };
     }
   });
@@ -39,4 +35,12 @@ const traverse = (caller, parentPath) => {
   return hierarchy;
 };
 
-export default traverse;
+const traverseDir = (basePath, directory) => ({
+  [basename(directory)]: {
+    type: DIR_TYPE,
+    path: relativePath(basePath, directory),
+    contents: traverse(basePath, directory)
+  }
+});
+
+export default traverseDir;
