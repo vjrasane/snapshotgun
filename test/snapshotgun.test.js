@@ -39,16 +39,16 @@ const definedDirPath = join(
 
 const cleanup = () => {
   if (fs.existsSync(testFilePath)) {
-    fs.unlink(testFilePath);
+    fs.unlinkSync(testFilePath);
   }
   if (fs.existsSync(definedExecFilePath)) {
-    fs.unlink(definedExecFilePath);
+    fs.unlinkSync(definedExecFilePath);
   }
   if (fs.existsSync(definedDirPath)) {
-    fs.unlink(definedDirPath);
+    fs.unlinkSync(definedDirPath);
   }
   if (fs.existsSync(commonJsPath)) {
-    fs.unlink(commonJsPath);
+    fs.unlinkSync(commonJsPath);
   }
 };
 
@@ -64,17 +64,23 @@ describe('test snapshotgun', () => {
   });
 
   it('already exists', () => {
-    fs.writeFileSync(testFilePath, 'already exists');
-    snapshotgun(join(dir, 'data/snapshotgun/valid'), {});
-    expect(fs.existsSync(testFilePath)).toBeTruthy();
-    expect(fs.readFileSync(testFilePath, 'utf-8')).toEqual('already exists');
+    const path = join(dir, 'data/snapshotgun/already-exists');
+    const testPath = join(path, 'testcase/testcase.test.js');
+    fs.writeFileSync(testPath, 'already exists');
+    snapshotgun(path, {});
+    expect(fs.existsSync(testPath)).toBeTruthy();
+    expect(fs.readFileSync(testPath, 'utf-8')).toEqual('already exists');
+    fs.unlinkSync(testPath);
   });
 
   it('overwrite', () => {
-    fs.writeFileSync(testFilePath, 'nothing here');
-    snapshotgun(join(dir, 'data/snapshotgun/valid'), { overwrite: true });
-    expect(fs.existsSync(testFilePath)).toBeTruthy();
-    expect(fs.readFileSync(testFilePath, 'utf-8')).toEqual(expectedBasic);
+    const path = join(dir, 'data/snapshotgun/overwrite');
+    const testPath = join(path, 'testcase/testcase.test.js');
+    fs.writeFileSync(testPath, 'nothing here');
+    snapshotgun(path, { overwrite: true });
+    expect(fs.existsSync(testPath)).toBeTruthy();
+    expect(fs.readFileSync(testPath, 'utf-8')).toEqual(expectedBasic);
+    fs.unlinkSync(testPath);
   });
 
   it('defined execute', () => {
