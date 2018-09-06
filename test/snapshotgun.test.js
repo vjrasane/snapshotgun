@@ -24,6 +24,10 @@ const definedExecFilePath = join(
   dir,
   'data/snapshotgun/no-candidates/testcase/testcase.test.js'
 );
+const definedDirPath = join(
+  dir,
+  'data/snapshotgun/defined-dir/defined-dir.test.js'
+);
 
 const cleanup = () => {
   if (fs.existsSync(testFilePath)) {
@@ -31,6 +35,9 @@ const cleanup = () => {
   }
   if (fs.existsSync(definedExecFilePath)) {
     fs.unlink(definedExecFilePath);
+  }
+  if (fs.existsSync(definedDirPath)) {
+    fs.unlink(definedDirPath);
   }
 };
 
@@ -70,12 +77,11 @@ describe('test snapshotgun', () => {
   });
 
   it('defined directory', () => {
-    cleanup();
     snapshotgun(join(dir, 'data/snapshotgun/no-test-directories'), {
-      dir: '../valid/testcase'
+      dir: '../defined-dir'
     });
-    expect(fs.existsSync(testFilePath)).toBeTruthy();
-    expect(fs.readFileSync(testFilePath, 'utf-8')).toEqual(expectedDefinedDir);
+    expect(fs.existsSync(definedDirPath)).toBeTruthy();
+    expect(fs.readFileSync(definedDirPath, 'utf-8')).toEqual(expectedDefinedDir);
   });
 
   it('multiple candidates', () => {

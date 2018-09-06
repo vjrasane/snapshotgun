@@ -1,7 +1,7 @@
-import execute from './../../no-test-directories/execute.js';
+import execute from './../no-test-directories/execute.js';
 import input from './input.json';
 
-it('testcase', () => {
+it('defined-dir', () => {
   const files = {
     input
   };
