@@ -4,6 +4,8 @@ import generate from './generate';
 import traverse from './traverse';
 import { getAnyField, replaceSlashes } from './utils';
 
+const isJsFile = file => /\.js$/.test(file);
+
 const snapshotgun = (baseDir, options) => {
   const base = replaceSlashes(baseDir);
 
@@ -18,16 +20,8 @@ const snapshotgun = (baseDir, options) => {
     if (!optDir && fs.statSync(fullPath).isDirectory()) {
       directories.push(traverse(base, fullPath));
     } else if (!optExec) {
-      try {
-        const code = module.require(fullPath);
-        if (
-          Object.keys(code).length === 1 &&
-          typeof code[Object.keys(code)[0]] === 'function'
-        ) {
-          executeCandidates.push(file);
-        }
-      } catch (error) {
-        // not importable code
+      if (isJsFile(file)) {
+        executeCandidates.push(file);
       }
     }
   });
