@@ -111,7 +111,7 @@ A test executor _must_ contain a _function_ default export, that receives an obj
 #### ES6
 
 ```javascript
-export default (files = myTestedFunction(files));
+export default files = myTestedFunction(files);
 ```
 
 #### CommonJS
@@ -224,7 +224,7 @@ Determines the generation mode. Single mode generates a single test case for eac
 **Note:** When using multi generation mode, the executor receives the single input file as its first argument and the rest of found test files as its second argument:
 
 ```javascript
-export default (input, file) = myTestedFunction(input, file));
+export default (input, file) = myTestedFunction(input, file);
 ```
 
 ### Overwrite
