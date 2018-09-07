@@ -1,6 +1,6 @@
 {
   "name": "snapshotgun",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "Generates Jest snapshot tests",
   "main": "dist/main.js",
   "bin": {
