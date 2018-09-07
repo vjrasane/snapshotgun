@@ -39,7 +39,7 @@ const snapshotgun = (baseDir, options) => {
     throw Error('No suitable test execution files found');
   } else if (executeCandidates.length > 1) {
     throw Error(
-      'Multiple candidates for test execution found: ' + executeCandidates
+      'Multiple candidates for test executor found: ' + executeCandidates
     );
   } else {
     exec = executeCandidates[0];
@@ -59,7 +59,7 @@ const snapshotgun = (baseDir, options) => {
   }
 
   process.stdout.write(
-    chalk.bgWhite(chalk.black('\n TESTCASE FUNCTION ')) + '\n * ' + exec
+    chalk.bgWhite(chalk.black('\n TESTCASE EXECUTOR ')) + '\n * ' + exec
   );
 
   process.stdout.write(

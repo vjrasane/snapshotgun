@@ -225,7 +225,7 @@ describe('test snapshotgun', () => {
   it('multiple candidates', () => {
     expect(() =>
       snapshotgun(join(dir, 'data/snapshotgun/multiple-candidates'), {})
-    ).toThrow('Multiple candidates for test execution found');
+    ).toThrow('Multiple candidates for test executor found');
   });
 
   it('no candidates', () => {
