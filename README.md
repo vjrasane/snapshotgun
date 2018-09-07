@@ -10,14 +10,12 @@ Takes a single test executor JavaScript file and a set of testcase directories a
 
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Importing](#importing)
   - [Generating testcases](#generating-testcases)
-  - [Test hierarchy](#test-hierarchy)
+  - [Test executor](#test-executor)
+  - [Test directories](#test-directories)
   - [Expecting errors](#expecting-errors)
   - [Filtering tests](#filtering-tests)
 - [Options](#options)
-  - [Test options](#test-options)
-  - [File options](#file-options)
 
 ## Installation ([npm](https://www.npmjs.com/package/snapshotgun))
 
@@ -36,6 +34,8 @@ $ yarn global add snapshotgun
 ```
 
 ## Usage
+
+### Generating testcases
 
 Snapshotgun is run from the command line with either:
 
@@ -102,7 +102,7 @@ Once the test files have been generated, the project can be tested with Jest as 
 
 **You should always verify that the first time generated snapshots match the expected output**
 
-## Test executor
+### Test executor
 
 Snapshotgun requires a test executor in order to generate testcases that test the intended functionality. The executor acts as an 'adapter' between your code and snapshotgun, which is imported in the testcases, instead of the actual code.
 
@@ -124,7 +124,7 @@ module.exports.default = function(files) {
 
 In most cases your tested function expects a specific input, so you'll have to unwrap the correct files before passing them on.
 
-## Test directories
+### Test directories
 
 Snapshotgun iterates recursively over all directories in the given test directory structure. The test directories can contain any files, but only JSON files will be scanned.
 

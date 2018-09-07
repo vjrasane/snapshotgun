@@ -36,6 +36,7 @@ const opts = [
 const displayUsage = () => process.stdout.write('\n' + cliUsage(usage));
 
 try {
+  process.stdout.write('\n' + '#'.repeat(71) + '\n');
   process.stdout.write(chalk.magenta(readLogo()));
   process.stdout.write('#'.repeat(71) + '\n');
   const options = args(opts);
