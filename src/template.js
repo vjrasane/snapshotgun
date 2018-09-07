@@ -9,7 +9,7 @@ const templates = {
 const read = (format, mode) => {
   const name = templates[format] || templates.es6;
   const fullName = name + (mode ? '-' + mode : '') + '.template';
-  const templatePath = join(dirname(dirname(module.filename)), 'resources', fullName);
+  const templatePath = join(dirname(dirname(module.filename)), 'resources/templates', fullName);
   const contents = fs.readFileSync(templatePath, 'utf-8');
   return contents;
 };

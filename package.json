@@ -15,6 +15,7 @@
     "test": "cross-env NODE_ENV=development jest --coverage"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "command-line-args": "^5.0.2",
     "handlebars": "^4.0.12"
   },

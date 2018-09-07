@@ -1,11 +1,10 @@
 import fs from 'fs';
 import { join, basename, relative } from 'path';
-import { replaceSlashes } from './utils';
+import { replaceSlashes, getFileName } from './utils';
 
 export const DIR_TYPE = 'dir';
 export const DOC_TYPE = 'doc';
 
-const getFileName = file => file.replace(/\.[^/.]+$/, '');
 const isJson = file => new RegExp('\\.json$', 'i').test(file);
 
 const traverse = (basePath, path) => {

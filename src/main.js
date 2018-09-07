@@ -1,11 +1,16 @@
 import args from 'command-line-args';
 import snapshotgun from './snapshotgun';
 import fs from 'fs';
-import { isAbsolute, relative } from 'path';
-// import relative from './relative';
-// import { join, normalize } from 'path';
+import { isAbsolute, relative, join, dirname } from 'path';
+import chalk from 'chalk';
 
 const processDir = process.cwd();
+
+const readLogo = () => {
+  const path = join(dirname(dirname(module.filename)), 'resources/logo.txt');
+  const contents = fs.readFileSync(path, 'utf-8');
+  return contents;
+};
 
 const file = filename => {
   if (!fs.existsSync(filename)) {
@@ -20,7 +25,16 @@ const opts = [
   { name: 'target', alias: 't', type: f => file(f) },
   { name: 'mode', alias: 'm', type: String },
   { name: 'overwrite', type: Boolean },
+  { name: 'dry-run', type: Boolean },
+  { name: 'verbose', alias: 'v', type: Boolean },
   { name: 'format', type: String }
 ];
 
-snapshotgun(processDir, args(opts));
+try {
+  process.stdout.write(chalk.magenta(readLogo()));
+  process.stdout.write('#'.repeat(71) + '\n');
+  snapshotgun(processDir, args(opts));
+  process.stdout.write(chalk.green('\nFINISHED'));
+} catch (error) {
+  process.stdout.write(chalk.red('\nFAILED: ') + error.message);
+}

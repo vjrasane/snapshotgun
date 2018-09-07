@@ -24,3 +24,5 @@ export const prependMissing = (str, pre) => {
 export const replaceSlashes = str => str.replace(/\\/g, '/');
 
 export const toPath = str => prependMissing(replaceSlashes(str), './');
+
+export const getFileName = file => file.replace(/\.[^/.]+$/, '');

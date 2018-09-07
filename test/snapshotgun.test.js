@@ -24,14 +24,29 @@ describe('test snapshotgun', () => {
     clean(testPath);
   });
 
+  it('verbose dry-run basic', () => {
+    const dirPath = join(dir, 'data/snapshotgun/valid');
+    snapshotgun(dirPath, { verbose: true, 'dry-run': true });
+  });
+
+  it('verbose dry-run skip', () => {
+    const dirPath = join(dir, 'data/snapshotgun/already-exists');
+    snapshotgun(dirPath, { verbose: true, 'dry-run': true });
+  });
+
+  it('verbose dry-run overwrite', () => {
+    const dirPath = join(dir, 'data/snapshotgun/already-exists');
+    snapshotgun(dirPath, { overwrite: true, verbose: true, 'dry-run': true });
+  });
+
   it('already exists', () => {
     const dirPath = join(dir, 'data/snapshotgun/already-exists');
     const testPath = join(dirPath, 'testcase/testcase.test.js');
-    fs.writeFileSync(testPath, 'already exists');
     snapshotgun(dirPath, {});
     expect(fs.existsSync(testPath)).toBeTruthy();
-    expect(fs.readFileSync(testPath, 'utf-8')).toEqual('already exists');
-    fs.unlinkSync(testPath);
+    expect(fs.readFileSync(testPath, 'utf-8')).toEqual(
+      "console.log('already-exists');\n"
+    );
   });
 
   it('overwrite', () => {
@@ -128,6 +143,18 @@ describe('test snapshotgun', () => {
     clean(testPath);
   });
 
+  it('multiple files', () => {
+    const dirPath = join(dir, 'data/snapshotgun/multiple-files');
+    const testPath = join(dirPath, 'testcase/testdir/testdir.test.js');
+    clean(testPath);
+    snapshotgun(dirPath, {});
+    expect(fs.existsSync(testPath)).toBeTruthy();
+    expect(fs.readFileSync(testPath, 'utf-8')).toEqual(
+      expected('multiple_files.js')
+    );
+    clean(testPath);
+  });
+
   it('multi', () => {
     const dirPath = join(dir, 'data/snapshotgun/multi');
     const testPath = join(dirPath, 'testcase/multifiles');
@@ -149,6 +176,32 @@ describe('test snapshotgun', () => {
       expect(fs.readFileSync(f, 'utf-8')).toEqual(
         expected(
           'multi/' + basename(f).substring(0, basename(f).indexOf('.')) + '.js'
+        )
+      )
+    );
+    testFiles.forEach(f => clean(f));
+  });
+
+  it('multiple test directories', () => {
+    const dirPath = join(dir, 'data/snapshotgun/multiple-test-directories');
+
+    const testFiles = [
+      join(dirPath, 'first/first.test.js'),
+      join(dirPath, 'second/second.test.js'),
+      join(dirPath, 'third/third.test.js')
+    ];
+
+    testFiles.forEach(f => clean(f));
+
+    snapshotgun(dirPath, {});
+
+    testFiles.forEach(f => expect(fs.existsSync(f)).toBeTruthy());
+    testFiles.forEach(f =>
+      expect(fs.readFileSync(f, 'utf-8')).toEqual(
+        expected(
+          'multidir/' +
+            basename(f).substring(0, basename(f).indexOf('.')) +
+            '.js'
         )
       )
     );

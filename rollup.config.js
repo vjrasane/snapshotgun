@@ -4,7 +4,7 @@ import progress from 'rollup-plugin-progress';
 import { uglify } from 'rollup-plugin-uglify';
 
 export default {
-  external: ['path', 'fs', 'handlebars', 'command-line-args'],
+  external: ['path', 'fs', 'handlebars', 'command-line-args', 'chalk'],
   input: 'src/main.js',
   output: {
     file: 'dist/main.js',

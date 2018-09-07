@@ -2,7 +2,7 @@ import handles from 'handlebars';
 import { DOC_TYPE, DIR_TYPE } from './traverse';
 import { filterObj, mapObj, toPath, replaceSlashes } from './utils';
 import read from './template';
-
+import chalk from 'chalk';
 import fs from 'fs';
 import { join, relative, isAbsolute } from 'path';
 
@@ -10,6 +10,12 @@ const getFilesOfType = (files, type) =>
   filterObj(files, (name, file) => file.type === type);
 
 const generate = (name, files, execute, baseDir, options) => {
+  const stats = {
+    created: 0,
+    overwritten: 0,
+    skipped: 0
+  };
+
   const getTestPath = testDir => {
     if (options.target) {
       if (isAbsolute(options.target)) {
@@ -22,13 +28,34 @@ const generate = (name, files, execute, baseDir, options) => {
     }
   };
 
+  const writeFile = (name, contents) =>
+    options['dry-run'] ? (() => {})() : fs.writeFileSync(name, contents);
+
   const writeTest = (name, path, contents) => {
     const testFileName = join(baseDir, path, name + '.test.js');
-    if (!fs.existsSync(testFileName) || options.overwrite) {
-      process.stdout.write(' --> Writing');
-      fs.writeFileSync(testFileName, contents);
+    if (!fs.existsSync(testFileName)) {
+      writeFile(testFileName, contents);
+      stats.created += 1;
+      if (options.verbose) {
+        process.stdout.write(
+          chalk.bgGreen(chalk.black(' CREATE ')) + ' ' + testFileName + '\n'
+        );
+      }
+    } else if (options.overwrite) {
+      writeFile(testFileName, contents);
+      stats.overwritten += 1;
+      if (options.verbose) {
+        process.stdout.write(
+          chalk.bgCyan(chalk.black(' OVERWRITE ')) + ' ' + testFileName + '\n'
+        );
+      }
     } else {
-      process.stdout.write(' --> Already exists');
+      stats.skipped += 1;
+      if (options.verbose) {
+        process.stdout.write(
+          chalk.bgYellow(chalk.black(' EXISTS ')) + ' ' + testFileName + '\n'
+        );
+      }
     }
   };
 
@@ -38,13 +65,13 @@ const generate = (name, files, execute, baseDir, options) => {
       const testPath = getTestPath(testDir);
       const absTestPath = join(baseDir, testPath);
 
-      process.stdout.write(' > Generating testcase: ' + testName);
-
       const executePath = toPath(
         replaceSlashes(relative(absTestPath, join(baseDir, execute)))
       );
 
-      const mainFile = toPath(replaceSlashes(relative(testPath, docs[doc].path)));
+      const mainFile = toPath(
+        replaceSlashes(relative(testPath, docs[doc].path))
+      );
 
       const files = mapObj(parentDocs, (name, doc) =>
         toPath(replaceSlashes(relative(testPath, doc.path)))
@@ -64,8 +91,6 @@ const generate = (name, files, execute, baseDir, options) => {
   const singleTest = (testName, testDir, docs) => {
     const testPath = getTestPath(testDir);
     const absTestPath = join(baseDir, testPath);
-
-    process.stdout.write(' > Generating testcase: ' + testName);
 
     const executePath = toPath(
       replaceSlashes(relative(absTestPath, join(baseDir, execute)))
@@ -101,6 +126,8 @@ const generate = (name, files, execute, baseDir, options) => {
   };
 
   traverse(name, files, {});
+
+  return stats;
 };
 
 export default generate;
