@@ -1,7 +1,7 @@
-const execute = require('./../execute.js');
-const input = require('./input.json');
+import execute from './../../valid/execute.js';
+import input from './input.json';
 
-it('testcase', function () {
+it('testcase', () => {
   const files = {
     input
   };

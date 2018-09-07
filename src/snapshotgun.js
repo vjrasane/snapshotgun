@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { join, basename } from 'path';
+import { join, basename, relative, isAbsolute } from 'path';
 import generate from './generate';
 import traverse from './traverse';
-import { getAnyField, replaceSlashes } from './utils';
+import { replaceSlashes } from './utils';
 
 const isJsFile = file => /\.js$/.test(file);
 
@@ -12,14 +12,11 @@ const snapshotgun = (baseDir, options) => {
   const executeCandidates = [];
   const directories = [];
 
-  const optExec = getAnyField(['exec', 'e'], options);
-  const optDir = getAnyField(['dir', 'd'], options);
-
   fs.readdirSync(base).forEach(file => {
     const fullPath = replaceSlashes(join(base, file));
-    if (!optDir && fs.statSync(fullPath).isDirectory()) {
+    if (!options.dir && fs.statSync(fullPath).isDirectory()) {
       directories.push(traverse(base, fullPath));
-    } else if (!optExec) {
+    } else if (!options.exec) {
       if (isJsFile(file)) {
         executeCandidates.push(file);
       }
@@ -27,8 +24,11 @@ const snapshotgun = (baseDir, options) => {
   });
 
   let exec;
-  if (optExec) {
-    exec = optExec;
+  if (options.exec) {
+    exec = replaceSlashes(options.exec);
+    if (isAbsolute(exec)) {
+      exec = relative(base, exec);
+    }
   } else if (executeCandidates.length < 1) {
     throw Error('No suitable test execution files found');
   } else if (executeCandidates.length > 1) {
@@ -40,14 +40,17 @@ const snapshotgun = (baseDir, options) => {
   }
 
   let dirs;
-  if (optDir) {
-    dirs = [traverse(base, join(base, optDir))];
+  if (options.dir) {
+    let dirPath = replaceSlashes(options.dir);
+    if (isAbsolute(dirPath)) { dirPath = relative(base, dirPath); }
+    dirs = [traverse(base, join(base, dirPath))];
   } else if (!directories.length) {
     throw Error('No test file directories found.');
   } else {
     dirs = directories;
   }
 
+  process.stdout.write('\n======= GENERATING TESTCASES =======\n');
   dirs.forEach(dir => generate(basename(base), dir, exec, base, options));
 };
 

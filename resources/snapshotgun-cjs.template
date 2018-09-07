@@ -10,7 +10,7 @@ it('{{testName}}', function () {
     {{/each}}
   };
   try {
-    expect(execute(files)).toMatchSnapshot();
+    expect(execute.default(files)).toMatchSnapshot();
   } catch (error) {
     expect(error).toMatchSnapshot();
   }

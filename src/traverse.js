@@ -1,6 +1,5 @@
 import fs from 'fs';
-import relativePath from './relative';
-import { join, basename } from 'path';
+import { join, basename, relative } from 'path';
 import { replaceSlashes } from './utils';
 
 export const DIR_TYPE = 'dir';
@@ -14,7 +13,7 @@ const traverse = (basePath, path) => {
 
   fs.readdirSync(path).forEach(filename => {
     const fullPath = replaceSlashes(join(path, filename));
-    const relPath = relativePath(basePath, fullPath);
+    const relPath = replaceSlashes(relative(basePath, fullPath));
 
     if (fs.statSync(fullPath).isDirectory()) {
       const files = traverse(basePath, fullPath);
@@ -39,7 +38,7 @@ const traverse = (basePath, path) => {
 const traverseDir = (basePath, directory) => ({
   [basename(directory)]: {
     type: DIR_TYPE,
-    path: relativePath(basePath, directory),
+    path: replaceSlashes(relative(basePath, directory)),
     contents: traverse(basePath, directory)
   }
 });
