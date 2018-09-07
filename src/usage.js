@@ -5,6 +5,15 @@ export default [
       'Generates Jest snapshot tests from given file structure and its JSON contents.'
   },
   {
+    header: 'Synopsis',
+    content: [
+      '$ snapshotgun [{bold --exec} {underline file}] [{bold --dir} {underline directory}] [{bold --target} {underline directory}] ...',
+      '$ snapshotgun [{bold --mode} {underline single/multi}] [{bold --format} {underline cjs/es6}] ...',
+      '$ snapshotgun [{bold --overwrite}] [{bold --dry-run}] [{bold --verbose}] ...',
+      '$ snapshotgun {bold --help}'
+    ]
+  },
+  {
     header: 'Options',
     optionList: [
       {

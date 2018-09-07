@@ -48,4 +48,5 @@ try {
 } catch (error) {
   process.stdout.write(chalk.red('\nFAILED: ') + error.message);
   displayUsage();
+  process.exit(1);
 }
