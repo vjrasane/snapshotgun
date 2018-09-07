@@ -1,10 +1,11 @@
 const execute = require('./../execute.js');
 const input = require('./input.json');
 
+const files = {
+  input
+};
+
 it('testcase', function () {
-  const files = {
-    input
-  };
   try {
     expect(execute.default(files)).toMatchSnapshot();
   } catch (error) {

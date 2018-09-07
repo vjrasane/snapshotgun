@@ -2,13 +2,14 @@ import fs from 'fs';
 import { join, dirname } from 'path';
 
 const templates = {
-  es6: 'snapshotgun-es6.template',
-  cjs: 'snapshotgun-cjs.template'
+  es6: 'snapshotgun-es6',
+  cjs: 'snapshotgun-cjs'
 };
 
-const read = format => {
+const read = (format, mode) => {
   const name = templates[format] || templates.es6;
-  const templatePath = join(dirname(dirname(module.filename)), 'resources', name);
+  const fullName = name + (mode ? '-' + mode : '') + '.template';
+  const templatePath = join(dirname(dirname(module.filename)), 'resources', fullName);
   const contents = fs.readFileSync(templatePath, 'utf-8');
   return contents;
 };

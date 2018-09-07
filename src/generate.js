@@ -4,20 +4,38 @@ import { filterObj, mapObj, toPath, replaceSlashes } from './utils';
 import read from './template';
 
 import fs from 'fs';
-import { join, relative } from 'path';
+import { join, relative, isAbsolute } from 'path';
 
 const getFilesOfType = (files, type) =>
   filterObj(files, (name, file) => file.type === type);
 
 const generate = (name, files, execute, baseDir, options) => {
-  const traverse = (testName, dir, parentDocs) => {
-    const contents = dir.contents ? dir.contents : dir;
-    const docs = getFilesOfType(contents, DOC_TYPE);
-    const dirs = getFilesOfType(contents, DIR_TYPE);
+  const getTestPath = testDir => {
+    if (options.target) {
+      if (isAbsolute(options.target)) {
+        return replaceSlashes(relative(baseDir, options.target));
+      } else {
+        return options.target;
+      }
+    } else {
+      return testDir.path;
+    }
+  };
 
-    const inheritedDocs = { ...parentDocs, ...docs };
-    if (!Object.keys(dirs).length && Object.keys(docs).length) {
-      const testPath = dir.path;
+  const writeTest = (name, path, contents) => {
+    const testFileName = join(baseDir, path, name + '.test.js');
+    if (!fs.existsSync(testFileName) || options.overwrite) {
+      process.stdout.write(' --> Writing');
+      fs.writeFileSync(testFileName, contents);
+    } else {
+      process.stdout.write(' --> Already exists');
+    }
+  };
+
+  const multipleTests = (testDir, docs, parentDocs) => {
+    Object.keys(docs).forEach(doc => {
+      const testName = doc;
+      const testPath = getTestPath(testDir);
       const absTestPath = join(baseDir, testPath);
 
       process.stdout.write(' > Generating testcase: ' + testName);
@@ -26,24 +44,58 @@ const generate = (name, files, execute, baseDir, options) => {
         replaceSlashes(relative(absTestPath, join(baseDir, execute)))
       );
 
-      const files = mapObj(inheritedDocs, (name, doc) =>
+      const mainFile = toPath(replaceSlashes(relative(testPath, docs[doc].path)));
+
+      const files = mapObj(parentDocs, (name, doc) =>
         toPath(replaceSlashes(relative(testPath, doc.path)))
       );
 
-      const testFileContents = handles.compile(read(options.format))({
+      const testFileContents = handles.compile(read(options.format, 'multi'))({
+        mainFile,
         files,
         testName,
         executePath
       });
 
-      const testFileName = join(baseDir, testPath, testName + '.test.js');
-      if (!fs.existsSync(testFileName) || options.overwrite) {
-        process.stdout.write(' --> Writing');
-        fs.writeFileSync(testFileName, testFileContents);
+      writeTest(testName, testPath, testFileContents);
+    });
+  };
+
+  const singleTest = (testName, testDir, docs) => {
+    const testPath = getTestPath(testDir);
+    const absTestPath = join(baseDir, testPath);
+
+    process.stdout.write(' > Generating testcase: ' + testName);
+
+    const executePath = toPath(
+      replaceSlashes(relative(absTestPath, join(baseDir, execute)))
+    );
+
+    const files = mapObj(docs, (name, doc) =>
+      toPath(replaceSlashes(relative(testPath, doc.path)))
+    );
+
+    const testFileContents = handles.compile(read(options.format))({
+      files,
+      testName,
+      executePath
+    });
+
+    writeTest(testName, testPath, testFileContents);
+  };
+
+  const traverse = (testName, dir, parentDocs) => {
+    const contents = dir.contents ? dir.contents : dir;
+    const docs = getFilesOfType(contents, DOC_TYPE);
+    const dirs = getFilesOfType(contents, DIR_TYPE);
+
+    const inheritedDocs = { ...parentDocs, ...docs };
+    if (!Object.keys(dirs).length && Object.keys(docs).length) {
+      if (options.mode === 'multi') {
+        multipleTests(dir, docs, parentDocs);
       } else {
-        process.stdout.write(' --> Already exists');
+        singleTest(testName, dir, inheritedDocs);
       }
-      process.stdout.write('     (' + absTestPath + ')\n');
     }
     Object.keys(dirs).forEach(d => traverse(d, dirs[d], inheritedDocs));
   };

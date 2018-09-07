@@ -1,10 +1,11 @@
 import execute from './../../valid/execute.js';
 import input from './input.json';
 
+const files = {
+  input
+};
+
 it('testcase', () => {
-  const files = {
-    input
-  };
   try {
     expect(execute(files)).toMatchSnapshot();
   } catch (error) {
