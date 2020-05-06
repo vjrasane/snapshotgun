@@ -12,13 +12,16 @@
     "build": "cross-env NODE_ENV=production rollup -c",
     "watch": "rollup -c -w",
     "lint": "node_modules/.bin/eslint .",
-    "test": "cross-env NODE_ENV=development jest --coverage"
+    "test": "cross-env NODE_ENV=development jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "dependencies": {
     "chalk": "^2.4.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
-    "handlebars": "^4.0.12"
+    "handlebars": "^4.0.12",
+    "snyk": "^1.319.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -57,5 +60,6 @@
     "url": "https://github.com/vjrasane/snapshotgun"
   },
   "author": "Ville Räsänen",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "snyk": true
 }
